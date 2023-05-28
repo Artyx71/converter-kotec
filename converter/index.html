@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Конвертер валют</title>
+    <style>
+       .converter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    
+    .input-group {
+      margin-bottom: 10px;
+    }
+    
+    label {
+      margin-right: 10px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    #result {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="converter">
+      <div class="input-group">
+        <label for="base-currency">Базовая валюта:</label>
+        <select id="base-currency">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+    </div>
+    <div class="input-group">
+        <label for="target-currency">Целевая валюта:</label>
+        <select id="target-currency">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+  
+      <button onclick="convertCurrency()">Конвертировать</button>
+  
+      <div id="result"></div>
+    </div>
+  
+    <script>
+      function convertCurrency() {
+        const baseCurrency = document.getElementById('base-currency').value;
+        const targetCurrency = document.getElementById('target-currency').value;
+  
+        fetch(`/api/currency?base=${baseCurrency}&target=${targetCurrency}`)
+          .then(response => response.json())
+          .then(data => {
+            const resultElement = document.getElementById('result');
+            if (data.error) {
+              resultElement.textContent = `Ошибка: ${data.error}`;
+            } else {
+              resultElement.textContent = `1 ${data.base} = ${data.rate} ${data.target}`;
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = 'Ошибка при конвертации валюты';
+          });
+      }
+    </script>
+  </body>
+</html>
